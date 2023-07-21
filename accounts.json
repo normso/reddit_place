@@ -1,0 +1,6 @@
+{
+    "accounts":[
+        {"username":"<put-username-here>","passwd":"<put-password-here>"},
+        {"username":"<put-username-here>","passwd":"<put-password-here>"}
+    ]
+}

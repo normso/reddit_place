@@ -41,7 +41,7 @@ def getColorId(color:str)->int:
     except:
         return -1
 
-def setPixel(x:int,y:int,colorId:int,canvasId:int,authToken:str):
+def getHeaders(authToken:str):
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0",
         "Accept": "*/*",
@@ -49,6 +49,9 @@ def setPixel(x:int,y:int,colorId:int,canvasId:int,authToken:str):
         "content-type": "application/json",
         "authorization": f"Bearer {authToken}"
     }
+    return headers
+
+def setPixel(x:int,y:int,colorId:int,canvasId:int,authToken:str):
     request_data = {
         "operationName": "setPixel",
         "variables": {
@@ -64,21 +67,15 @@ def setPixel(x:int,y:int,colorId:int,canvasId:int,authToken:str):
         "query": "mutation setPixel($input: ActInput!) {\n  act(input: $input) {\n    data {\n      ... on BasicMessage {\n        id\n        data {\n          ... on GetUserCooldownResponseMessageData {\n            nextAvailablePixelTimestamp\n            __typename\n          }\n          ... on SetPixelResponseMessageData {\n            timestamp\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
     }
 
-    res = requests.post(url, headers=headers,json=request_data)
+    res = requests.post(url, headers=getHeaders(authToken),json=request_data)
     resJ = json.loads(res.text)
     if "errors" not in resJ:
         return(resJ["data"]["act"]["data"][0]["data"]["nextAvailablePixelTimestamp"],True)
-    # print(resJ)
+    if "extensions" not in resJ["errors"][0]:
+        return (sys.maxsize,False)
     return (resJ["errors"][0]["extensions"]["nextAvailablePixelTs"],False)
 
 def getPixelDetail(x:int,y:int,colorId:int,canvasId:int,authToken:str):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0",
-        "Accept": "*/*",
-        "Accept-Language": "en-US,en;q=0.5",
-        "content-type": "application/json",
-        "authorization": f"Bearer {authToken}"
-    }
     request_data = {
         "operationName": "pixelHistory",
         "variables": {
@@ -94,38 +91,35 @@ def getPixelDetail(x:int,y:int,colorId:int,canvasId:int,authToken:str):
         "query": "mutation pixelHistory($input: ActInput!) {\n  act(input: $input) {\n    data {\n      ... on BasicMessage {\n        id\n        data {\n          ... on GetTileHistoryResponseMessageData {\n            lastModifiedTimestamp\n            userInfo {\n              userID\n              username\n              __typename\n            }\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
     }
 
-    res = requests.post(url, headers=headers,json=request_data)
+    res = requests.post(url, headers=getHeaders(authToken),json=request_data)
     return res.text
 
 
 def setCoolDownTime(x:int,y:int,colorId:int,canvasId:int,authToken:str)->str:
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0",
-        "Accept": "*/*",
-        "Accept-Language": "en-US,en;q=0.5",
-        "content-type": "application/json",
-        "authorization": f"Bearer {authToken}"
-    }
+    
     request_data = {
-        "operationName": "setPixel",
+        "query": "mutation GetPersonalizedTimer{\n  act(\n    input: {actionName: \"r/replace:get_user_cooldown\"}\n  ) {\n    data {\n      ... on BasicMessage {\n        id\n        data {\n          ... on GetUserCooldownResponseMessageData {\n            nextAvailablePixelTimestamp\n          }\n        }\n      }\n    }\n  }\n}\n\n\nsubscription SUBSCRIBE_TO_CONFIG_UPDATE {\n  subscribe(input: {channel: {teamOwner: GARLICBREAD, category: CONFIG}}) {\n    id\n    ... on BasicMessage {\n      data {\n        ... on ConfigurationMessageData {\n          __typename\n          colorPalette {\n            colors {\n              hex\n              index\n            }\n          }\n          canvasConfigurations {\n            dx\n            dy\n            index\n          }\n          canvasWidth\n          canvasHeight\n        }\n      }\n    }\n  }\n}\n\n\nsubscription SUBSCRIBE_TO_CANVAS_UPDATE {\n  subscribe(\n    input: {channel: {teamOwner: GARLICBREAD, category: CANVAS, tag: \"0\"}}\n  ) {\n    id\n    ... on BasicMessage {\n      id\n      data {\n        __typename\n        ... on DiffFrameMessageData {\n          currentTimestamp\n          previousTimestamp\n          name\n        }\n        ... on FullFrameMessageData {\n          __typename\n          name\n          timestamp\n        }\n      }\n    }\n  }\n}\n\n\n\n\nmutation SET_PIXEL {\n  act(\n    input: {actionName: \"r/replace:set_pixel\", PixelMessageData: {coordinate: { x: 53, y: 35}, colorIndex: 3, canvasIndex: 0}}\n  ) {\n    data {\n      ... on BasicMessage {\n        id\n        data {\n          ... on SetPixelResponseMessageData {\n            timestamp\n          }\n        }\n      }\n    }\n  }\n}\n\n\n\n\n# subscription configuration($input: SubscribeInput!) {\n#     subscribe(input: $input) {\n#       id\n#       ... on BasicMessage {\n#         data {\n#           __typename\n#           ... on RReplaceConfigurationMessageData {\n#             colorPalette {\n#               colors {\n#                 hex\n#                 index\n#               }\n#             }\n#             canvasConfigurations {\n#               index\n#               dx\n#               dy\n#             }\n#             canvasWidth\n#             canvasHeight\n#           }\n#         }\n#       }\n#     }\n#   }\n\n# subscription replace($input: SubscribeInput!) {\n#   subscribe(input: $input) {\n#     id\n#     ... on BasicMessage {\n#       data {\n#         __typename\n#         ... on RReplaceFullFrameMessageData {\n#           name\n#           timestamp\n#         }\n#         ... on RReplaceDiffFrameMessageData {\n#           name\n#           currentTimestamp\n#           previousTimestamp\n#         }\n#       }\n#     }\n#   }\n# }\n",
         "variables": {
             "input": {
-                "actionName": "r/replace:set_pixel",
-                "PixelMessageData": {
-                    "coordinate": {"x": x, "y": y},
-                    "colorIndex": colorId,
-                    "canvasIndex": canvasId
+                "channel": {
+                    "teamOwner": "GARLICBREAD",
+                    "category": "R_REPLACE",
+                    "tag": "canvas:0:frames"
                 }
             }
         },
-        "query": "mutation setPixel($input: ActInput!) {\n  act(input: $input) {\n    data {\n      ... on BasicMessage {\n        id\n        data {\n          ... on GetUserCooldownResponseMessageData {\n            nextAvailablePixelTimestamp\n            __typename\n          }\n          ... on SetPixelResponseMessageData {\n            timestamp\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+        "operationName": "GetPersonalizedTimer",
+        "id": None
     }
 
-    res = requests.post(url, headers=headers,json=request_data)
+    res = requests.post(url, headers=getHeaders(authToken),json=request_data)
     resJ = json.loads(res.text)
     if "errors" not in resJ:
-        return resJ["data"]["act"]["data"][0]["data"]["nextAvailablePixelTimestamp"]
-    return resJ["errors"][0]["extensions"]["nextAvailablePixelTs"]
+        cool =  resJ["data"]["act"]["data"][0]["data"]["nextAvailablePixelTimestamp"]
+        if cool == None :
+            return 0
+        return cool
+    return sys.maxsize
 
 def main():
     data = {}
@@ -135,6 +129,7 @@ def main():
         if len(data["accounts"]) <= 0:
             print("Provide accounts auth token")
             return
+        print(f"fetching the cooldown time of all accounts => {len(data['accounts'])}")
         for acc in data["accounts"]:
             if "cooldown" not in acc :
                 cId = getCanvasIndex(data["pixels"][0]["x"],data["pixels"][0]["y"])
@@ -146,7 +141,7 @@ def main():
     if len(data["pixels"]) <= 0:
         print("No pixels provided")
         return
-    
+    print("Placing of tiles started")
     while True:
         i = 0
         while i < len(data["pixels"]):
