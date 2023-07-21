@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import argparse
+
 import requests
 import json
 import sys
@@ -68,7 +68,7 @@ def setPixel(x:int,y:int,colorId:int,canvasId:int,authToken:str):
     resJ = json.loads(res.text)
     if "errors" not in resJ:
         return(resJ["data"]["act"]["data"][0]["data"]["nextAvailablePixelTimestamp"],True)
-    print(resj)
+    # print(resJ)
     return (resJ["errors"][0]["extensions"]["nextAvailablePixelTs"],False)
 
 def getPixelDetail(x:int,y:int,colorId:int,canvasId:int,authToken:str):
@@ -123,7 +123,6 @@ def setCoolDownTime(x:int,y:int,colorId:int,canvasId:int,authToken:str)->str:
 
     res = requests.post(url, headers=headers,json=request_data)
     resJ = json.loads(res.text)
-    print(resJ)
     if "errors" not in resJ:
         return resJ["data"]["act"]["data"][0]["data"]["nextAvailablePixelTimestamp"]
     return resJ["errors"][0]["extensions"]["nextAvailablePixelTs"]
@@ -139,8 +138,7 @@ def main():
         for acc in data["accounts"]:
             if "cooldown" not in acc :
                 cId = getCanvasIndex(data["pixels"][0]["x"],data["pixels"][0]["y"])
-                acc["cooldown"] = setCoolDownTime(data["pixels"][0]["x"],data["pixels"][0]["y"],getColorId(data["pixels"][0]["color"]),cId,acc["auth"])
-            print(acc["cooldown"])
+                acc["cooldown"] = setCoolDownTime(convertX(data["pixels"][0]["x"],cId),convertY(data["pixels"][0]["y"],cId),getColorId(data["pixels"][0]["color"]),cId,acc["auth"])
     except Exception as e:
         print("Unable to read file",e)
         return
@@ -148,35 +146,37 @@ def main():
     if len(data["pixels"]) <= 0:
         print("No pixels provided")
         return
-    i = 0
-    while i < len(data["pixels"]):
-        curP = data["pixels"][i]
-        available_acc = sorted(data["accounts"],key=lambda x : int(x["cooldown"]))[0]
+    
+    while True:
+        i = 0
+        while i < len(data["pixels"]):
+            curP = data["pixels"][i]
+            available_acc = sorted(data["accounts"],key=lambda x : int(x["cooldown"]))[0]
 
-        if available_acc["cooldown"] > (time.time()*1000) :
-            secs = (available_acc["cooldown"] - (time.time()*1000))/1000
-            print(f"sleeping until the cooltime {secs/60} mins")
-            time.sleep(secs)
-            continue
+            if available_acc["cooldown"] > (time.time()*1000) :
+                secs = (available_acc["cooldown"] - (time.time()*1000))/1000
+                print(f"sleeping until the cooltime {secs//60} mins and {(secs%60)} secs")
+                time.sleep(secs)
+                continue
 
-        canvasId = getCanvasIndex(curP["x"],curP["y"])
-        
-        colorId = getColorId(curP["color"])
-        if colorId == -1:
-            print("wronge color provide correct color wronge pixel data")
-            i += 1
-            continue
+            canvasId = getCanvasIndex(curP["x"],curP["y"])
+            
+            colorId = getColorId(curP["color"])
+            if colorId == -1:
+                print("wronge color provide correct color wronge pixel data")
+                i += 1
+                continue
 
-        x = convertX(curP["x"],canvasId)
-        y = convertY(curP["y"],canvasId)
+            x = convertX(curP["x"],canvasId)
+            y = convertY(curP["y"],canvasId)
 
 
-        cooldown , res = setPixel(x,y,colorId,canvasId,available_acc["auth"])
-        if res:
+            cooldown , res = setPixel(x,y,colorId,canvasId,available_acc["auth"])
+            if res:
+                available_acc["cooldown"] = int(cooldown)
+                i += 1
+                continue
             available_acc["cooldown"] = int(cooldown)
-            i += 1
-            continue
-        available_acc["cooldown"] = int(cooldown)
 
 
 if __name__ == "__main__":
