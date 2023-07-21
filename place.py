@@ -68,6 +68,7 @@ def setPixel(x:int,y:int,colorId:int,canvasId:int,authToken:str):
     resJ = json.loads(res.text)
     if "errors" not in resJ:
         return(resJ["data"]["act"]["data"][0]["data"]["nextAvailablePixelTimestamp"],True)
+    print(resj)
     return (resJ["errors"][0]["extensions"]["nextAvailablePixelTs"],False)
 
 def getPixelDetail(x:int,y:int,colorId:int,canvasId:int,authToken:str):
@@ -159,11 +160,7 @@ def main():
             continue
 
         canvasId = getCanvasIndex(curP["x"],curP["y"])
-        if canvasId != 1 and canvasId != 4:
-            print("Currently canvas is not expanded wronge pixel!!")
-            i += 1
-            continue
-
+        
         colorId = getColorId(curP["color"])
         if colorId == -1:
             print("wronge color provide correct color wronge pixel data")
