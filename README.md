@@ -1,5 +1,3 @@
-## Run command
-
 Fill the data.json file with the auth token of the accounts
 And pixels field with the pixels you want to fill 
 
@@ -9,6 +7,8 @@ And pixels field with the pixels you want to fill
 pip install requests
 ```
 
+
+### Run Command
 
 ```bash
 python place.py
