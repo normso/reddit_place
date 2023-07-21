@@ -1,0 +1,10 @@
+{
+    "accounts":[
+        
+        {"auth":"<put your auth token here>"}
+    ],
+    "pixels":[
+        {"x":229,"y":251,"color":"red"},
+        {"x":230,"y":251,"color":"red"}
+    ]
+}
