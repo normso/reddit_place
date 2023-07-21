@@ -5,6 +5,7 @@ And pixels field with the pixels you want to fill
 
 
 
-'''bash
+```bash
 python place.py
-'''
+
+```
