@@ -35,7 +35,23 @@ def getCanvasIndex(x:int,y:int)->int:
             return 2
 
 def getColorId(color:str)->int:
-    colorPalate = {"red":2,"blue":13,"white":31,"green":6,"black":27,"yellow":4,"orange":3,"purple":19}
+    colorPalate = {"red":2,
+                    "orange":3,
+                    "yellow":4,
+                    "dark_green":6,
+                    "light_green":8,
+                    "dark_blue":12,
+                    "blue":13,
+                    "light_blue":14,
+                    "dark_purple":18,
+                    "purple":19,
+                    "light_pink":23,
+                    "brown":25,
+                    "black":27,
+                    "gray":29,
+                    "light_gray":30,
+                    "white":31 
+                }
     try :
         return colorPalate[color]
     except:

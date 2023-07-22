@@ -19,10 +19,39 @@ playwright install chromium
 ```bash
 python auth.py
 ```
-3. Finally run the place.py script to place the tiles.
+3. Fill the data.json with pixels data in the pixels key (Refer to Color palate section for color names available).Put as many as pixel
+    For example:-
+    ```json
+    "pixels":[
+        {"x":<x pos>,"y":<y pos>,"color":"<color name>"}
+    ]
+    ```
+
+4. Finally run the place.py script to place the tiles.
 ```bash
 python place.py
 ```
-4. To close the script just press Ctrl+c
+5. To close the script just press Ctrl+c
+
+### Color Palate current available 
+
+'''toml
+orange:3
+yellow:4
+dark_green:6
+light_green:8
+dark_blue:12
+blue:13
+light_blue:14
+dark_purple:18
+purple:19
+light_pink:23
+brown:25
+black:27
+gray:29
+light_gray:30
+white:31 
+'''
+
 
 
