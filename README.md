@@ -50,6 +50,7 @@ playwright install chromium
 12. black
 13. gray
 14. light_gray
+15. red
 16. white
 
 
