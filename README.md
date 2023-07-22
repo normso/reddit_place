@@ -38,21 +38,21 @@ playwright install chromium
 
 ### Color Palatte current available 
 
-1.orange
-2.yellow
-3.dark_green
-4.light_green
-5.dark_blue 
-6.blue
-7.light_blue
-8.dark_purple
-9.purple
-10.light_pink
-11.brown
-12.black
-13.gray
-14.light_gray
-16.white
+1. orange
+2. yellow
+3. dark_green
+4. light_green
+5. dark_blue 
+6. blue
+7. light_blue
+8. dark_purple
+9. purple
+10. light_pink
+11. brown
+12. black
+13. gray
+14. light_gray
+16. white
 
 
 
