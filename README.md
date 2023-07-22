@@ -26,9 +26,7 @@ playwright install chromium
         {"x":234,"y":456,"color":"red"}
     ]
     ```
-    x => x position of pixel
-    y => y position of pixel
-    color => color of the pixel
+    x => x position of pixel , y => y position of pixel ,color => color of the pixel
 
 4. Finally run the place.py script to place the tiles.
     ```bash
