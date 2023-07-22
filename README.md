@@ -16,42 +16,44 @@ playwright install chromium
 
 1. Put accounts username and password in accounts.json
 2. Run the auth.py script to generate auth token for each accounts in the accounts.json (Note :- this step does not to be run every time only if token get expire or after every 6-8 hr to just refersh the new tokens).
-```bash
-python auth.py
-```
+    ```bash
+    python auth.py
+    ```
 3. Fill the data.json with pixels data in the pixels key (Refer to Color palatte section for color names available).Put as many as pixel
     For example:-
     ```json
     "pixels":[
-        {"x":<x pos>,"y":<y pos>,"color":"<color name>"}
+        {"x":234,"y":456,"color":"red"}
     ]
     ```
+    x => x position of pixel
+    y => y position of pixel
+    color => color of the pixel
 
 4. Finally run the place.py script to place the tiles.
-```bash
-python place.py
-```
+    ```bash
+    python place.py
+    ```
 5. To close the script just press Ctrl+c
 
 ### Color Palatte current available 
 
-```toml
-orange:3
-yellow:4
-dark_green:6
-light_green:8
-dark_blue:12
-blue:13
-light_blue:14
-dark_purple:18
-purple:19
-light_pink:23
-brown:25
-black:27
-gray:29
-light_gray:30
-white:31 
-```
+1.orange
+2.yellow
+3.dark_green
+4.light_green
+5.dark_blue 
+6.blue
+7.light_blue
+8.dark_purple
+9.purple
+10.light_pink
+11.brown
+12.black
+13.gray
+14.light_gray
+16.white
+
 
 
 
