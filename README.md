@@ -19,7 +19,7 @@ playwright install chromium
 ```bash
 python auth.py
 ```
-3. Fill the data.json with pixels data in the pixels key (Refer to Color palate section for color names available).Put as many as pixel
+3. Fill the data.json with pixels data in the pixels key (Refer to Color palatte section for color names available).Put as many as pixel
     For example:-
     ```json
     "pixels":[
@@ -33,9 +33,9 @@ python place.py
 ```
 5. To close the script just press Ctrl+c
 
-### Color Palate current available 
+### Color Palatte current available 
 
-'''toml
+```toml
 orange:3
 yellow:4
 dark_green:6
@@ -51,7 +51,7 @@ black:27
 gray:29
 light_gray:30
 white:31 
-'''
+```
 
 
 
