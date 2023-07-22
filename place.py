@@ -35,7 +35,7 @@ def getCanvasIndex(x:int,y:int)->int:
             return 2
 
 def getColorId(color:str)->int:
-    colorPalate = {"red":2,
+    colorPalatte = {"red":2,
                     "orange":3,
                     "yellow":4,
                     "dark_green":6,
@@ -53,7 +53,7 @@ def getColorId(color:str)->int:
                     "white":31 
                 }
     try :
-        return colorPalate[color]
+        return colorPalatte[color]
     except:
         return -1
 
@@ -173,6 +173,7 @@ def main():
             canvasId = getCanvasIndex(curP["x"],curP["y"])
             
             colorId = getColorId(curP["color"])
+            
             if colorId == -1:
                 print("wronge color provide correct color wronge pixel data")
                 i += 1
